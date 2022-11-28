@@ -37,8 +37,7 @@ const bookController =async function (req,res){
         if(!isValidString(subcategory) || !isValidName(subcategory))  return res.status(400).send({status:false,message:"Please enter the valid subcategory"})
         
         if(!releasedAt)  return res.status(400).send({status:false,message:"releasedAt is required"})
-        if(!isValidDate(releasedAt))  return res.status(400).send({status:false,message:"Please enter the valid subcategory"})
-        // let date = moment(releasedAt).format("YYYY-MM-DD")
+        if(!isValidDate(releasedAt))  return res.status(400).send({status:false,message:"Please enter the valid releasedAT"})
 
         let bookdata= await bookModel.create(data)
         return res.status(201).send({status:true, message:'Success',data:bookdata})
@@ -55,16 +54,17 @@ const getBooks =async function (req,res){
         let data=req.query
         let {userId,category,subcategory} =data
         if(Object.keys(data).length==0){
-            let data1= await bookModel.find({isDeleted:false})
+            let data1= await bookModel.find({isDeleted:false}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
+            data1.sort((a,b) => (a.title > b.title) ? 1 : ((a.title < b.title) ? -1 : 0))
             return res.status(200).send({status:true, message:'Success',data:data1})
         }else{
-            let data2= await bookModel.find({$and:[{$or:[{userId:userId},{category:category},{subcategory:subcategory}]},{isDeleted:false}]})
+            let data2= await bookModel.find({$and:[req.query,{isDeleted:false}]}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
+            data2.sort((a,b) => (a.title > b.title) ? 1 : ((a.title < b.title) ? -1 : 0))
             return res.status(200).send({status:true, message:'Success',data:data2})
         }
     }catch(error){
         return res.status(500).send({status:false,message:error.message})
     }
 }
-
 
 module.exports={bookController,getBooks}
