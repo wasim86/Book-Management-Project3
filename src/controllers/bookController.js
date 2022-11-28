@@ -2,7 +2,7 @@
 const bookModel=require('../models/bookModel')
 const userModel=require('../models/userModel')
 const moment = require('moment')
-const {isValidISBN, isIdValid, isValidString,isValidName}= require('../validator/validator')
+const {isValidDate,isValidISBN, isIdValid, isValidString,isValidName}= require('../validator/validator')
 
 const bookController =async function (req,res){
 
@@ -37,9 +37,8 @@ const bookController =async function (req,res){
         if(!isValidString(subcategory) || !isValidName(subcategory))  return res.status(400).send({status:false,message:"Please enter the valid subcategory"})
         
         if(!releasedAt)  return res.status(400).send({status:false,message:"releasedAt is required"})
-        let date = moment(releasedAt).format("YYYY-MM-DD")
-        data.releasedAt = date
-        // console.log(data.releasedAt)
+        if(!isValidDate(releasedAt))  return res.status(400).send({status:false,message:"Please enter the valid subcategory"})
+        // let date = moment(releasedAt).format("YYYY-MM-DD")
 
         let bookdata= await bookModel.create(data)
         return res.status(201).send({status:true, message:'Success',data:bookdata})

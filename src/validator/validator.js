@@ -56,10 +56,16 @@ const isValidPassword = function (pw) {
 //==============================// isValidISBN //==============================
 
 const isValidISBN = function (pw) {
-  let pass = /^[\d*\-]{10,13}$/;
+  let pass = /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/;
   if (pass.test(pw)) return true;
 };
 
+//===============================// isValidDate //==============================
+
+function isValidDate (date){
+   return /^([0-9]{4}[-][0-9]{2}[-][0-9]{2})$/.test(date)
+}
+
 //=============================// module exports //================================
 
-module.exports = {isValidISBN ,isValidPassword, isValidEmail, isIdValid, isValidString,isValidName,isValidMobile,isValidImage}
+module.exports = {isValidDate,isValidISBN ,isValidPassword, isValidEmail, isIdValid, isValidString,isValidName,isValidMobile,isValidImage}
