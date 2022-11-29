@@ -51,12 +51,12 @@ const getBooks =async function (req,res){
 
     try{
         if(Object.keys(req.query).length==0){
-            let data1= await bookModel.find({isDeleted:false}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
-            data1.sort((a,b) => (a.title > b.title) ? 1 : ((a.title < b.title) ? -1 : 0))
+            let data1= await bookModel.find({isDeleted:false}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1}).sort({title:1})
+            if(data1.length==0) return res.status(404).send({status:false,message:"No books found"})
             return res.status(200).send({status:true, message:'Success',data:data1})
         }else{
-            let data2= await bookModel.find({$and:[req.query,{isDeleted:false}]}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
-            data2.sort((a,b) => (a.title > b.title) ? 1 : ((a.title < b.title) ? -1 : 0))
+            let data2= await bookModel.find({$and:[req.query,{isDeleted:false}]}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1}).sort({title:1})
+            if(data2.length==0) return res.status(404).send({status:false,message:"No books found"})
             return res.status(200).send({status:true, message:'Success',data:data2})
         }
     }catch(error){
