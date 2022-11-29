@@ -51,8 +51,6 @@ const bookController =async function (req,res){
 const getBooks =async function (req,res){
 
     try{
-        // let data=req.query
-        // let {userId,category,subcategory} =data
         if(Object.keys(req.query).length==0){
             let data1= await bookModel.find({isDeleted:false}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
             data1.sort((a,b) => (a.title > b.title) ? 1 : ((a.title < b.title) ? -1 : 0))
