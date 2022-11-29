@@ -30,8 +30,6 @@ const userController =async function (req,res){
         
         if(!password)  return res.status(400).send({status:false,message:"password is required"})
         if(!isValidPassword(password))  return res.status(400).send({status:false,message:"Please enter the valid password"})
-        
-        if(!isValidString(address.street) || !isValidString(address.city) ||!isValidString(address.pincode))  return res.status(400).send({status:false,message:"Please enter the valid address"})
 
         let userdata= await userModel.create(data)
         return res.status(201).send({status:true, message:'Success',data:userdata})
