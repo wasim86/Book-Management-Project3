@@ -1,7 +1,6 @@
 
 const bookModel=require('../models/bookModel')
 const userModel=require('../models/userModel')
-const moment = require('moment')
 const {isValidDate,isValidISBN, isIdValid, isValidString,isValidName}= require('../validator/validator')
 
 const bookController =async function (req,res){

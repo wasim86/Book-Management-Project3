@@ -11,7 +11,7 @@ const authentication = function (req,res,next){
             if (err) {
               return res.status(400).send({ status: false, message: 'Invalid Token' })
             }
-            req.id = decodedToken
+            req.id = decodedToken.userId
             next()
         })
     }
