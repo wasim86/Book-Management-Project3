@@ -26,24 +26,31 @@ const authentication = function (req,res,next){
 let authorisation=async function(req,res,next){
 
     try{ 
-      let bookId=req.params.bookId
-    
-      if(!isIdValid(bookId))
-      return res.status(400).send({status:false,message:"please provide valid object id."})
-    
-      let findBook=await bookModel.findById(bookId)
-      if(!findBook)
-      return res.status(404).send({status:false,message:"No such book found."})
-    
-      if(req.id != findBook.userId) return res.status(403).send({statusbar:false,message:"Not authorized."})
-      next()
+      if(Object.keys(req.params).length==0){
+
+         let data=req.body.userId
+         if(!isIdValid(data)) return res.status(400).send({status:false,message:"please provide valid object id"})
+         if(data!= req.id) return res.status(403).send({statusbar:false,message:"Not authorized"})
+         next()
+
+      }else{
+
+        let bookId=req.params.bookId
+        if(!isIdValid(bookId))  return res.status(400).send({status:false,message:"please provide valid object id"})
+      
+        let findBook=await bookModel.findById(bookId)
+        if(!findBook)  return res.status(404).send({status:false,message:"No such book found"})
+      
+        if(req.id != findBook.userId) return res.status(403).send({status:false,message:"Not authorized"})
+        next()
+
+      } 
+      
     }catch(error){
       return res.status(500).send({status:false,message:error.message})
     }
 
   }
-
-  
 
 module.exports={authentication,authorisation}
 

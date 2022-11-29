@@ -9,7 +9,7 @@ router.post('/register',userController)
 
 router.post('/login',login)
 
-router.post('/books',authentication,bookController)
+router.post('/books',authentication,authorisation,bookController)
 
 router.get('/books',authentication,getBooks)
 
