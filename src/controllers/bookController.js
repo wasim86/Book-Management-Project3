@@ -139,18 +139,8 @@ const deleteBook = async function (req, res) {
       if(!isIdValid(bookId)) return res.status(400).send({ status: false, message: "invalid bookId" });
 
       let data = await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false },{ isDeleted: true, deletedAt: new Date(Date.now()) },{ new: true });
-    //   let obj = {};
-    //   if (req.params.bookId) {
-    //     if (!isIdValid(bookId))
-    //       return res.status(404).send({ status: false, msg: "Please provide valid bookId" });
-    //     else obj.bookId = req.params.bookId;
-    //   }
-    //   const dataObj = { isDeleted: true };
-  
-    //   let checkBook = await bookModel.findOneAndUpdate({ _id: obj.bookId, isDeleted: false },{ $set: dataObj, deletedAt: Date.now() },{ new: true });
-    //   if (!isIdValid(checkBook))
-    //     return res.status(404).send({ status: false, msg: "No Books Found" });
-  
+      if(!data) return res.status(400).send({ status: false, message: "Book is already deleted" });
+   
       res.status(200).send({status: true,message: "Success",data: data});
     } 
     catch (error) {
