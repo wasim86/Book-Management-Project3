@@ -16,23 +16,31 @@ const createReview=async function(req,res){
     if(!reviewedBy) return res.status(400).send({status:false,message:"reviewedBy is required"})
     if(!rating) return res.status(400).send({status:false,message:"rating is required"})
 
-   if((rating<1 || rating>5) || typeof(rating) !=='number') return res.status(400).send({status:false,message:"rating must betweeen 1 to 5."})
+    if(!isValidString(reviewedBy) || !isValidName(reviewedBy)) return res.status(400).send({status:false,message:"please provide reviewer's name in the correct format."})
 
-   if(!isValidString(reviewedBy) || !isValidName(reviewedBy)) return res.status(400).send({status:false,message:"please provide reviewer's name in the correct format."})
+   if((rating<1 || rating>5) || typeof(rating) !=='number') return res.status(400).send({status:false,message:"rating must betweeen 1 to 5."})
 
    const searchBook=await bookModel.findById({_id:bookId})
    if(!searchBook) return res.status(404).send({status:false,message:"Book not found."})
 
    reviewBody.bookId=searchBook._id
-    reviewBody.reviewedAt=new Date() 
+   reviewBody.reviewedAt=new Date() 
 
    if(searchBook.isDeleted==true) return res.status(400).send({status:false,message:"Book is already deleted."})
 
    const addReview=await reviewModel.create(reviewBody)
 
-   let update= await bookModel.findOneAndUpdate({id:bookId},{ $inc: { reviews: 1 } },{new:true}).select({__v:0})
+   let update= await bookModel.findOneAndUpdate({_id:bookId},{ $inc: { reviews: 1 } },{new:true}).select({__v:0})
 
-   let obj={...update._doc,reviewData:[addReview]}
+   let obj1={}
+   obj1.bookId=addReview.bookId
+   obj1._id=addReview._id
+   obj1.reviewedBy=addReview.reviewedBy
+   obj1.reviewedAt=addReview.reviewedAt
+   obj1.rating=addReview.rating
+   obj1.review=addReview.review
+
+   let obj={...update._doc,reviewData:[obj1]}
 
    return res.status(200).send({status:true,message:'success',data:obj})
 
@@ -49,7 +57,7 @@ const reviewUpdate =async function (req,res){
         let data= req.params 
 
         if(!isIdValid(data.bookId)) return res.status(400).send({status:false,message:"invalid bookId"})
-        let data1= await bookModel.findOne({ _id:data.bookId, isDeleted:false}) 
+        let data1= await bookModel.findOne({ _id:data.bookId, isDeleted:false}).select({__v:0}) 
         if(!data1)  return res.status(400).send({status:false,message:"book is deleted"})
 
         if(!isIdValid(data.reviewId)) return res.status(400).send({status:false,message:"invalid reviewId"})
@@ -78,24 +86,22 @@ const reviewDeleteById = async function (req, res) {
         let bookId = req.params.bookId;
         let reviewId = req.params.reviewId;
 
-        if (!isValid(bookId))
-           return res.status(400).send({ status: false, message: "please enter valid bookId"});
+        if(!isIdValid(bookId))  return res.status(400).send({ status: false, message: "please enter valid bookId"});
 
-        if (!isValid(reviewId))
-           return res.status(400).send({ status: false, message: "enter valid reviewId"});
+        if(!isIdValid(reviewId))  return res.status(400).send({ status: false, message: "enter valid reviewId"});
         
         const bookExist = await bookModel.findOne({ _id: bookId, isDeleted: false})
         if(!bookExist) return res.status(404).send({ status: false, message: "book not found"});
 
 
-        const reviewExist = await reviewModel.findOne({ _id: reviewId, bookId: bookId })
+        const reviewExist = await reviewModel.findOne({ _id: reviewId, bookId: bookId ,isDeleted:false})
         if (!reviewExist) return res.status(404).send({ status: false, message: "review not found"});
         
         if ( reviewExist.isDeleted == true)
            return res.status(400).send({ status: false, message: "review is already deleted" });
 
 
-        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: -1} })
+        await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, {$and:[{isDeleted:true},{ $inc: { reviews: -1} }]})
         return res.status(200).send({ status: true, message: "deleted succesfully" })
 
     } catch( error) {
