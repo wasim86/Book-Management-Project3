@@ -6,7 +6,7 @@ const reviewModel =new mongoose.Schema({
   bookId: {type:objectId, required:true, ref:"Book"},
   reviewedBy: {type:String,required:true, default: 'Guest'},
   reviewedAt: {type:Date,required:true},
-  rating: {type:Number,required:true,min:1,max:5},
+  rating: {type:Number,required:true},
   review: {type:String},
   isDeleted: {type:Boolean, default: false}
 

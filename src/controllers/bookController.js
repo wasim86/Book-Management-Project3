@@ -72,24 +72,12 @@ const getBookReviewData = async function (req,res){
         if(Object.keys(req.params).length==0) return res.status(400).send({status:false,message:"BookId is required in path params"})
 
         if(!isIdValid(data))  return res.status(400).send({status:false,message:"invalid bookId"})
-        let data2= await bookModel.findById(data)
+        let data2= await bookModel.findById(data).select({__v:0})
         if(!data2) return res.status(404).send({status:false,message:"No books found"})
 
-        let data1= await reviewModel.find({bookId:data}) 
-    
-        let obj={}
-        obj._id=data2._id
-        obj.title=data2.title
-        obj.excerpt=data2.excerpt
-        obj.userId=data2.userId
-        obj.category=data2.category
-        obj.subcategory=data2.subcategory
-        obj.isDeleted=data2.isDeleted
-        obj.reviews=data1.length
-        obj.releasedAt=data2.releasedAt
-        obj.createdAt=data2.createdAt
-        obj.updatedAt=data2.updatedAt
-        obj.reviewsData=data1
+        let data1= await reviewModel.find({bookId:data}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
+
+        let obj={...data2._doc,reviewData:data1}
 
         return res.status(200).send({status:true, message:'Success',data:obj})
 
@@ -148,6 +136,6 @@ const deleteBook = async function (req, res) {
     }
   }
 
-  
+
 
 module.exports={bookController,getBooks,getBookReviewData,updateBook ,deleteBook}
