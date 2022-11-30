@@ -122,9 +122,9 @@ const updateBook = async function (req,res){
 
     let isb= await bookModel.findOne({ISBN:ISBN})
     if(isb) return res.status(400).send({status:false,message:"This ISBN is already exist in Database"})
-
+    
     let updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: {title, excerpt, releasedAt, ISBN }},{ new: true });
-
+      
     res.status(200).send({ status: true, message: "Success", data: updatedBook });
     }catch(error){
         return res.status(500).send({status:false,message:error.message})
@@ -147,5 +147,7 @@ const deleteBook = async function (req, res) {
       return res.status(500).send({ status: false, message: error.message });
     }
   }
+
+  
 
 module.exports={bookController,getBooks,getBookReviewData,updateBook ,deleteBook}
