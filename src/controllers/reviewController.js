@@ -54,8 +54,9 @@ const reviewUpdate =async function (req,res){
         if(Object.keys(req.body).length==0) return res.status(400).send({status:false,message:"Request body cann't be empty"})
         
         let {reviewedBy,rating,review} =req.body
-        if((rating<1 || rating>5) || typeof(rating) !=='number') return res.status(400).send({status:false,message:"rating must betweeen 1 to 5."})
-
+        if(rating || rating==""){
+        if((rating<1 || rating>5) || typeof(rating) !=='number') return res.status(400).send({status:false,message:"rating must be a number betweeen 1 to 5."})
+        }
         if(!isIdValid(bookId)) return res.status(400).send({status:false,message:"invalid bookId"})
         let data1= await bookModel.findOne({ _id:bookId, isDeleted:false}).select({__v:0}) 
         if(!data1)  return res.status(400).send({status:false,message:"Book data is already deleted or doesn't exist"})
