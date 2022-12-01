@@ -72,10 +72,10 @@ const getBookReviewData = async function (req,res){
         if(Object.keys(req.params).length==0) return res.status(400).send({status:false,message:"BookId is required in path params"})
 
         if(!isIdValid(data))  return res.status(400).send({status:false,message:"invalid bookId"})
-        let data2= await bookModel.findById(data).select({__v:0})
-        if(!data2) return res.status(404).send({status:false,message:"No books found"})
+        let data2= await bookModel.findOne({_id:data , isDeleted:false}).select({__v:0})
+        if(!data2) return res.status(404).send({status:false,message:"book is already deleted or doesn't exist"})
 
-        let data1= await reviewModel.find({bookId:data}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
+        let data1= await reviewModel.find({bookId:data , isDeleted:false}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
 
         let obj={...data2._doc,reviewData:data1}
 
