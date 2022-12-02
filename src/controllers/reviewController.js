@@ -36,9 +36,9 @@ const createReview=async function(req,res){
     obj1.rating=addReview.rating
     obj1.review=addReview.review
 
-   let obj={...update._doc,reviewData:[obj1]}
+   let obj={...update._doc,reviewsData:[obj1]}
 
-   return res.status(200).send({status:true,message:'success',data:obj})
+   return res.status(201).send({status:true,message:'Success',data:obj})
 
     }catch(error){
         return res.status(500).send({message:error.message})
@@ -66,7 +66,7 @@ const reviewUpdate =async function (req,res){
         let data3= await reviewModel.findOneAndUpdate({bookId:bookId ,_id:reviewId , isDeleted:false},{reviewedBy,rating,review},{new:true}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
         if(!data3) return res.status(404).send({status:false,message:"review data is already deleted or doesn't exist"})
 
-        let obj={...data1._doc,reviewData:[data3]}
+        let obj={...data1._doc,reviewsData:[data3]}
  
         return res.status(200).send({status:true, message:'Success',data:obj})
 

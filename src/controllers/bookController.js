@@ -80,7 +80,7 @@ const getBookReviewData = async function (req,res){
         if(!data2) return res.status(404).send({status:false,message:"book is already deleted or doesn't exist"})
 
         let data1= await reviewModel.find({bookId:data , isDeleted:false}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
-        let obj={...data2._doc,reviewData:data1}
+        let obj={...data2._doc,reviewsData:data1}
 
         return res.status(200).send({status:true, message:'Success',data:obj})
 
