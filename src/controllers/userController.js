@@ -52,7 +52,7 @@ const login =async function (req,res){
     let userdata= await userModel.findOne({email:email,password:password})
     if(!userdata) return res.status(404).send({status:false,message:"Email and password doesn't match with users Database"})
     let encoded = jwt.sign({userId:userdata._id},"secretKey",{expiresIn: '10h'})
-    return res.status(200).send({status:true, message:'Success',data:encoded})
+    return res.status(200).send({status:true, message:'Success',data:{token:encoded}})
 
   }catch(error){
     return res.status(500).send({status:false,message:error.message})
