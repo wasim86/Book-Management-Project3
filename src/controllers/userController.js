@@ -2,7 +2,7 @@ const userModel=require('../models/userModel')
 const {isValidPassword, isValidEmail, isIdValid, isValidString,isValidName,isValidMobile}= require('../validator/validator')
 const jwt=require('jsonwebtoken')
 
-const userController =async function (req,res){
+const createUser =async function (req,res){
 
     try{
 
@@ -60,4 +60,4 @@ const login =async function (req,res){
 
 }
 
-module.exports={userController,login}
+module.exports={createUser,login}

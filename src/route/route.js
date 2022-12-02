@@ -1,16 +1,16 @@
 const express=require('express') 
-const { bookController, getBooks, getBookReviewData ,updateBook ,deleteBook } = require('../controllers/bookController')
+const { createBook, getBooks, getBookReviewData ,updateBook ,deleteBook } = require('../controllers/bookController')
 const router= express.Router()
 const {authentication,authorisation} =require('../middleware/auth')
-const {userController,login}=require('../controllers/userController')
+const {createUser,login}=require('../controllers/userController')
 const {createReview,reviewUpdate,reviewDeleteById}= require('../controllers/reviewController')
 
 
-router.post('/register',userController)
+router.post('/register',createUser)
 
 router.post('/login',login)
 
-router.post('/books',authentication,authorisation,bookController)
+router.post('/books',authentication,authorisation,createBook)
 
 router.get('/books',authentication,getBooks)
 

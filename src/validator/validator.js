@@ -38,14 +38,6 @@ const isValidMobile = function (mobile) {
  }
 }
 
-//==============================// isValidImage //===============================
-
-const isValidImage = function (image) {
-    if (/^(https\:\/\/.*\.(?:png|jpg|jpeg))/.test(image)){
-       return true
-    }
-   }
-
 //==============================// isValidPassword //==============================
 
 const isValidPassword = function (pw) {
@@ -68,4 +60,4 @@ function isValidDate (date){
 
 //=============================// module exports //================================
 
-module.exports = {isValidDate,isValidISBN ,isValidPassword, isValidEmail, isIdValid, isValidString,isValidName,isValidMobile,isValidImage}
+module.exports = {isValidDate,isValidISBN ,isValidPassword, isValidEmail, isIdValid, isValidString,isValidName,isValidMobile}
