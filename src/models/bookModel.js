@@ -2,6 +2,10 @@ const mongoose=require('mongoose')
 const objectId=mongoose.Schema.Types.ObjectId
 const bookModel=new mongoose.Schema({
 
+        bookCover:{
+                type : String,
+                required: true
+            },
         title: {type:String,required:true, unique:true},
         excerpt: {type:String,required:true}, 
         userId: {type:objectId,required:true,ref:"User"},
